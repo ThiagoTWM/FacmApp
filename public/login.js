@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // Obtener elementos del DOM de la página de login (FacmApp.html)
-  // Los IDs deben coincidir con los de FacmApp.html
+ 
   const form = document.getElementById("form-login");
   const usuarioInput = document.getElementById("user");
   const claveInput = document.getElementById("pass");
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (form) {
     form.addEventListener("submit", async (e) => {
-      e.preventDefault(); // Previene el envío tradicional del formulario
+      e.preventDefault(); 
 
       const usuario = usuarioInput.value.trim();
       const contrasena = claveInput.value;
@@ -27,19 +27,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await fetch("http://localhost:3000/login", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Indica que estamos enviando JSON
+            "Content-Type": "application/json", 
           },
-          body: JSON.stringify({ usuario, contrasena }), // Convierte los datos a JSON
-          credentials: "include", // ¡ESENCIAL! Envía cookies con la solicitud cross-origin
+          body: JSON.stringify({ usuario, contrasena }), 
+          credentials: "include", 
         });
 
-        const data = await response.json(); // Parsea la respuesta JSON del servidor
+        const data = await response.json(); 
 
         if (response.ok) {
-          // Si la respuesta es OK (status 200-299), el login fue exitoso
-          window.location.href = "/index.html"; // Redirige a la aplicación de PDFs (index.html)
+        
+          window.location.href = "/index.html"; 
         } else {
-          // Si la respuesta no es OK, muestra el mensaje de error del servidor
+          
           if (mensajeError) {
             mensajeError.textContent = data.error || "Error en el inicio de sesión.";
             mensajeError.style.display = "block";
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   } else {
-    // Mensaje de error en consola si el formulario no se encuentra (para depuración)
+    
     console.error("Error: No se encontró el formulario con el ID 'form-login'.");
   }
 });
