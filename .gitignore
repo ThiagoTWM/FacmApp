@@ -1,17 +1,17 @@
-# Archivos de entorno y secretos
+
 .env
 
-# Dependencias de Node.js
+
 node_modules/
 
-# Archivos de log
+
 *.log
 
-# Archivos temporales de uploads (si los borras después de usar)
+
 uploads/
 
-# Archivos de sistema operativo (macOS)
+
 .DS_Store
 
-# Archivos de VS Code (opcional, si usas VS Code)
+
 .vscode/
