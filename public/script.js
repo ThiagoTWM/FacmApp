@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnEnviar = document.getElementById("enviar-todo");
     const estado = document.getElementById("estado");
     const loader = document.getElementById("loader");
-    // ¡NUEVOS ELEMENTOS DEL DOM para CSV!
+
     const csvFileInput = document.getElementById("csvFileInput");
-    const btnCargarCsv = document.getElementById("cargarCsv"); // Asegúrate de que este ID existe en tu index.html
+    const btnCargarCsv = document.getElementById("cargarCsv"); 
 
     console.log("btnEnviar antes de addEventListener:", btnEnviar);
     console.log("btnCargarCsv antes de addEventListener:", btnCargarCsv);
@@ -16,8 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let contador = 1;
 
-    // Listener para el botón "Añadir recibo"
-    if (btnAgregar) { // Verificación extra por si el botón 'agregar-fila' no se encuentra
+  
+    if (btnAgregar) { 
         btnAgregar.addEventListener("click", () => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
@@ -33,27 +33,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
             `;
             tablaBody.appendChild(fila);
-            window.updateContador(); // Actualiza el contador después de añadir
+            window.updateContador(); 
         });
     } else {
         console.error("Error: No se encontró el botón con el ID 'agregar-fila'.");
     }
 
 
-    // Función global para actualizar el contador de filas
+   
     window.updateContador = () => {
         const filas = tablaBody.querySelectorAll('tr');
         filas.forEach((fila, index) => {
             const numeroCelda = fila.querySelector('td:first-child');
-            if (numeroCelda) { // Asegurarse de que la celda exista
+            if (numeroCelda) { 
                 numeroCelda.textContent = index + 1;
             }
         });
-        contador = filas.length + 1; // Actualiza el contador para la próxima fila
+        contador = filas.length + 1; 
     };
 
-    // Listener para el botón "Cargar CSV de Mails"
-    if (btnCargarCsv) { // <--- ¡Verificación para btnCargarCsv!
+   
+    if (btnCargarCsv) { 
         btnCargarCsv.addEventListener("click", () => {
             const file = csvFileInput.files[0];
             if (!file) {
@@ -65,16 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const text = e.target.result;
-                const lines = text.split('\n').filter(line => line.trim() !== ''); // Ignorar líneas vacías
+                const lines = text.split('\n').filter(line => line.trim() !== ''); 
 
-                // Limpiar la tabla antes de cargar nuevos datos del CSV
+            
                 tablaBody.innerHTML = '';
-                // No resetear contador aquí, updateContador() se encargará al final del loop
+                
 
 
                 lines.forEach(line => {
-                    const email = line.trim(); // Cada línea es un email
-                    if (email) { // Asegurarse de que el email no esté vacío
+                    const email = line.trim(); 
+                    if (email) {
                         const fila = document.createElement("tr");
                         fila.innerHTML = `
                             <td></td> <td>
@@ -88,10 +88,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             </td>
                         `;
                         tablaBody.appendChild(fila);
-                        // No incrementar contador aquí, updateContador lo manejará para todas las filas
+                        
                     }
                 });
-                window.updateContador(); // <--- Llama a updateContador después de añadir todas las filas del CSV
+                window.updateContador(); 
                 estado.textContent = `Emails cargados desde CSV.`;
                 estado.style.color = "green";
             };
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error: No se encontró el botón con el ID 'cargarCsv'.");
     }
 
-    // Listener para el botón "Enviar todos"
+    
     if (btnEnviar) {
         btnEnviar.addEventListener("click", async () => {
             const filas = tablaBody.querySelectorAll("tr");
@@ -153,23 +153,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     credentials: "include",
                 });
 
-                // --- MANEJO ESPECÍFICO PARA 401 UNAUTHORIZED (Sesión expirada) ---
+             
                 if (response.status === 401) {
                     estado.textContent = "Sesión expirada o no autorizada. Redirigiendo al inicio de sesión...";
                     estado.style.color = "orange";
                     setTimeout(() => {
-                        window.location.href = "/FacmApp.html"; // Redirige al login
-                    }, 1500); // Pequeña espera para que el usuario vea el mensaje
-                    return; // Importante para detener la ejecución aquí
+                        window.location.href = "/FacmApp.html"; 
+                    }, 1500);
+                    return; 
                 }
 
-                const data = await response.json(); // Solo intentará parsear JSON si no es 401
+                const data = await response.json(); 
 
                 if (response.ok) {
                     estado.textContent = data.message;
                     estado.style.color = "green";
                     tablaBody.innerHTML = '';
-                    window.updateContador(); // Resetea y actualiza el contador después de limpiar la tabla
+                    window.updateContador(); 
                 } else {
                     estado.textContent = data.message || "Error al enviar recibos. Intenta de nuevo.";
                     estado.style.color = "red";
@@ -186,6 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error: No se encontró el botón con el ID 'enviar-todo'.");
     }
 
-    // Asegurarse de que el contador se actualice al cargar la página (inicialmente)
+   
     window.updateContador();
 });
