@@ -132,23 +132,23 @@ const upload = multer({ storage: storage });
 
 // -------------------- NODEMAILER (Configuración para enviar correos) --------------------
 
-// Obtenemos las credenciales de Gmail desde las variables de entorno
-const MAIL_USER = process.env.MAIL_USER;
-const MAIL_PASS = process.env.MAIL_PASS; // Clave de aplicación de Gmail
 
-// Advertencia si las credenciales de correo no están configuradas
+const MAIL_USER = process.env.MAIL_USER;
+const MAIL_PASS = process.env.MAIL_PASS; 
+
+
 if (!MAIL_USER || !MAIL_PASS) {
     console.warn("Advertencia: Las variables de entorno MAIL_USER o MAIL_PASS no están configuradas para Nodemailer.");
     console.warn("Asegúrate de haber añadido MAIL_USER y MAIL_PASS (clave de aplicación de Gmail) a tu archivo .env");
 }
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", // Usar el servicio 'gmail' facilita la configuración
+  service: "gmail", 
   auth: {
     user: MAIL_USER,
     pass: MAIL_PASS,
   },
-  // No necesitamos host, port, secure, tls con 'service: "gmail"' a menos que haya un caso muy específico
+  
 });
 
 
