@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background-color: #f1f8ff;
+  color: #002b5c;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #005bbb;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.logout-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 10;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+input[type="email"], input[type="file"] {
+  width: 90%;
+  padding: 6px;
+}
+
+.acciones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.csv-carga {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background-color: #005bbb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #003f88;
+}
+
+#estado {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.loader-overlay {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.7);
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #d3d3d3;
+  border-top: 6px solid #005bbb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-file-label {
+  background-color: #e6e6e6;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: 2px solid #ccc;
+  color: #002b5c;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.custom-file-label:hover {
+  background-color: #dbe9ff;
+  border-color: #005bbb;
+}
