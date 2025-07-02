@@ -12,11 +12,12 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config(); // Cargar variables de entorno al inicio
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Usa el puerto de Render o 3000 localmente
 
 // Middleware general
 app.use(cors({
-  origin: "http://localhost:3000",
+ 
+  origin: "https://facmapp.onrender.com",
   credentials: true,
 }));
 app.use(express.json());
@@ -24,46 +25,48 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(session({
-  secret: "faccmaSuperClave123", // Una cadena secreta para firmar la cookie de sesión
+  secret: process.env.SESSION_SECRET || "faccmaSuperClave123", 
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000, 
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días en milisegundos
     httpOnly: true,
-    secure: false, 
+  
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax' 
   },
 }));
 
 // Servir archivos estáticos desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, "public")));
 
-// --- Middleware de autenticación (MODIFICADO para manejar peticiones fetch) ---
+// --- Middleware de autenticación ---
 function protegerRuta(req, res, next) {
-  
+  // Verificar si la solicitud es una petición XHR/fetch
   const isXhr = req.xhr || req.headers.accept.includes('json') || req.headers['x-requested-with'] === 'XMLHttpRequest';
 
   if (req.session.usuario) {
-    next(); 
+    next(); // Si hay sesión, permite continuar
   } else {
-  
+    // Si no hay sesión
     if (isXhr) {
-      
+     
       return res.status(401).json({ message: "No autorizado. Por favor, inicia sesión de nuevo." });
     } else {
-      
+     
       res.redirect("/FacmApp.html");
     }
   }
 }
 
-// -------------------- RUTAS DE AUTENTICACIÓN Y REDIRECCIÓN (MODIFICADAS) --------------------
+// -------------------- RUTAS DE AUTENTICACIÓN Y REDIRECCIÓN --------------------
 
 // Ruta raíz: redirige al login si no hay sesión, a la app si sí hay
 app.get("/", (req, res) => {
   if (req.session.usuario) {
-    res.redirect("/index.html"); 
+    res.redirect("/index.html"); // Si hay sesión, va a la app principal
   } else {
-    res.redirect("/FacmApp.html"); 
+    res.redirect("/FacmApp.html"); // Si no hay sesión, va a la página de login
   }
 });
 
@@ -83,24 +86,32 @@ app.get("/logout", (req, res) => {
   });
 });
 
+// -------------------- LÓGICA DE LOGIN (MODIFICADA para usar .env) --------------------
 
+// Obtener las credenciales del usuario desde las variables de entorno
 const LOGIN_USER = process.env.LOGIN_USER;
 const LOGIN_PASS_HASH = process.env.LOGIN_PASS_HASH;
 
-
+// Advertencia si las variables de entorno para login no están configuradas (para depuración en desarrollo)
 if (!LOGIN_USER || !LOGIN_PASS_HASH) {
     console.warn("Advertencia: Las variables de entorno LOGIN_USER o LOGIN_PASS_HASH no están configuradas en .env.");
     console.warn("Asegúrate de haber generado el hash para la contraseña y añadido LOGIN_USER y LOGIN_PASS_HASH a tu archivo .env");
-
+    // En un entorno de producción, podrías considerar salir del proceso si las credenciales vitales no están presentes:
+    // process.exit(1);
 }
 
 // Ruta POST para el inicio de sesión
 app.post("/login", async (req, res) => {
   const { usuario, contrasena } = req.body;
 
-  
+  // Comparamos el usuario ingresado con el de la variable de entorno
   if (usuario === LOGIN_USER) {
-   
+    // Comparamos la contraseña ingresada con el HASH almacenado en la variable de entorno
+    // Asegurarse de que LOGIN_PASS_HASH no sea undefined o null
+    if (!LOGIN_PASS_HASH) {
+        console.error("Error: HASH de contraseña no cargado de las variables de entorno.");
+        return res.status(500).json({ error: "Error de configuración del servidor." });
+    }
     const passwordMatch = await bcrypt.compare(contrasena, LOGIN_PASS_HASH);
 
     if (passwordMatch) {
@@ -132,23 +143,23 @@ const upload = multer({ storage: storage });
 
 // -------------------- NODEMAILER (Configuración para enviar correos) --------------------
 
-
+// Obtenemos las credenciales de Gmail desde las variables de entorno
 const MAIL_USER = process.env.MAIL_USER;
-const MAIL_PASS = process.env.MAIL_PASS; 
+const MAIL_PASS = process.env.MAIL_PASS; // Clave de aplicación de Gmail
 
-
+// Advertencia si las credenciales de correo no están configuradas
 if (!MAIL_USER || !MAIL_PASS) {
     console.warn("Advertencia: Las variables de entorno MAIL_USER o MAIL_PASS no están configuradas para Nodemailer.");
     console.warn("Asegúrate de haber añadido MAIL_USER y MAIL_PASS (clave de aplicación de Gmail) a tu archivo .env");
 }
 
 const transporter = nodemailer.createTransport({
-  service: "gmail", 
+  service: "gmail", // Usar el servicio 'gmail' facilita la configuración
   auth: {
     user: MAIL_USER,
     pass: MAIL_PASS,
   },
-  
+  // No necesitamos host, port, secure, tls con 'service: "gmail"' a menos que haya un caso muy específico
 });
 
 
@@ -188,4 +199,6 @@ app.post("/enviar-recibos", protegerRuta, upload.array("recibos"), async (req, r
 // Iniciar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  // En Render, la URL real se mostrará en los logs
+  console.log(`Tu servicio está disponible en: ${process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`}`);
 });
