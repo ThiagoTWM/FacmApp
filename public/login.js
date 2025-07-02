@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("login-form");
+ const loginForm = document.getElementById('login-form');
   const estado = document.getElementById("estado");
 
   if (!form) {

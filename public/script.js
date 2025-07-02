@@ -5,7 +5,7 @@ const API_BASE_URL = "https://facmapp.onrender.com";
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  const btnAnadirRecibo = document.getElementById("agregar-fila");
+  const btnAnadirRecibo = document.getElementById("anadir-recibo");
   const tablaRecibos = document.getElementById("tabla-recibos");
   const btnEnviarTodos = document.getElementById("enviar-todos");
   const mensajeError = document.getElementById("mensaje-error-envio"); 
