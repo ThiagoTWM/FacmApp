@@ -40,18 +40,14 @@ function verificarSesion(req, res, next) {
 }
 
 // Ruta login
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
   const { username, password } = req.body;
-  console.log("Intento de login con:", username);
 
-  const USERNAME = process.env.LOGIN_USER;
-  const HASH = process.env.LOGIN_PASS_HASH;
-
-  if (username === USERNAME && await bcrypt.compare(password, HASH)) {
+  if (username === process.env.LOGIN_USER && password === process.env.LOGIN_PASS) {
     req.session.user = username;
-    return res.status(200).json({ message: "Login exitoso" });
+    return res.status(200).json({ message: "Login correcto" });
   } else {
-    return res.status(401).json({ message: "Credenciales incorrectas" });
+    return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
   }
 });
 

@@ -1,42 +1,45 @@
+// public/login.js
+
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("login-form");
-  const estado = document.getElementById("estado");
+  const loginForm = document.querySelector("form");
+  const inputUsuario = document.getElementById("usuario");
+  const inputContrasena = document.getElementById("contrasena");
+  const mensajeError = document.getElementById("mensaje-error");
 
-  if (!form) {
-    console.error("No se encontró el formulario con el ID 'login-form'.");
-    return;
-  }
+  if (mensajeError) mensajeError.style.display = "none";
 
-  form.addEventListener("submit", async (e) => {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const datos = new FormData(form);
-    const usuario = datos.get("usuario");
-    const contrasena = datos.get("contrasena");
+
+    const username = inputUsuario.value.trim();
+    const password = inputContrasena.value.trim();
+
+    if (!username || !password) {
+      mensajeError.textContent = "Por favor, completa todos los campos.";
+      mensajeError.style.display = "block";
+      return;
+    }
 
     try {
-      const response = await fetch("https://facmapp.onrender.com/FacmApp.html", {
+      const response = await fetch("/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario, contrasena }),
-        credentials: "include", // para que Render use la cookie de sesión
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        estado.textContent = "Ingreso exitoso. Redirigiendo...";
-        estado.style.color = "green";
-        setTimeout(() => {
-          window.location.href = "/index.html";
-        }, 1000);
+        window.location.href = "/index.html";
       } else {
-        estado.textContent = data.error || "Credenciales inválidas.";
-        estado.style.color = "red";
+        const data = await response.json();
+        mensajeError.textContent = data.message || "Credenciales incorrectas.";
+        mensajeError.style.display = "block";
       }
-    } catch (err) {
-      console.error("Error al enviar la solicitud:", err);
-      estado.textContent = "No se pudo conectar al servidor.";
-      estado.style.color = "red";
+    } catch (error) {
+      console.error("Error al enviar la solicitud:", error);
+      mensajeError.textContent = "Error de conexión con el servidor.";
+      mensajeError.style.display = "block";
     }
   });
 });
