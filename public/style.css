@@ -1,56 +1,84 @@
-/* Fondo general para login */
+/* Fondo general con degradado moderno */
 .login-page {
-  background: linear-gradient(to bottom right, #005bbb, #96c8fa);
+  background: linear-gradient(135deg, #005bbb, #96c8fa);
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 }
 
-/* Caja central de login */
+/* Caja central del login */
 .login-box {
-  background-color: white;
-  padding: 2rem 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
+/* Título */
 .login-box h1 {
-  margin-bottom: 1.5rem;
-  color: #002b5c;
-  font-size: 1.8rem;
+  margin-bottom: 1.8rem;
+  color: #003f88;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
+/* Inputs */
 .login-box input {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 1rem;
+  padding: 14px;
+  margin-bottom: 1.2rem;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 1rem;
+  transition: border 0.2s ease;
 }
 
+.login-box input:focus {
+  outline: none;
+  border-color: #005bbb;
+  box-shadow: 0 0 0 2px rgba(0, 91, 187, 0.2);
+}
+
+/* Botón */
 .login-box button {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   background-color: #005bbb;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .login-box button:hover {
-  background-color: #003f88;
+  background-color: #004a99;
 }
 
+/* Mensaje de error */
 #mensaje-error {
-  color: red;
-  margin-top: 10px;
+  color: #d62828;
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
 }
+
+/* Animación suave de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
