@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const contrasena = datos.get("contrasena");
 
     try {
-      const response = await fetch("https://facmapp.onrender.com/login", {
+      const response = await fetch("https://facmapp.onrender.com/FacmApp.html", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario, contrasena }),
