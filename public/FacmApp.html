@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FACCMA | Login</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FACCMA | Login</title>
+    <link rel="stylesheet" href="style.css"> </head>
 <body>
-  <main class="login-container">
-    <form id="login-form" class="login-box">
-      <h2>Acceso FACCMA</h2>
-      <input type="text" name="usuario" placeholder="Usuario" required />
-      <input type="password" name="contrasena" placeholder="Contraseña" required />
-      <button type="submit">Ingresar</button>
-      <p id="estado" class="estado-login"></p>
-    </form>
-  </main>
-  <script src="login.js"></script>
+    <div class="login-page"> <div class="login-box"> <h1>Acceso FACCMA</h1> <form id="login-form">
+                <input type="text" id="usuario" name="usuario" placeholder="Usuario" required>
+                <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                <button type="submit">Ingresar</button>
+            </form>
+            <p id="mensaje-error" style="display: none;"></p> </div>
+    </div>
+    <script src="login.js"></script>
 </body>
 </html>
