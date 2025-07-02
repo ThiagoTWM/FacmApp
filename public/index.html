@@ -1,49 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FACCMA | Envío múltiple de recibos</title>
-  <link rel="stylesheet" href="pdfs.css" />
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FACCMA | Envío múltiple de recibos</title>
+  <link rel="stylesheet" href="pdfs.css" /> </head>
 <body>
-  <header>
-    <h1>FACCMA - Envío de Recibos</h1>
-    <button onclick="location.href='/logout'" class="logout-btn">Cerrar sesión</button>
-  </header>
+  <header>
+    <h1>FACCMA - Envío de Recibos</h1>
+        <button id="cerrar-sesion" class="logout-btn">Cerrar sesión</button>
+  </header>
 
-  <main class="container">
-    <h2>Cargar recibos para enviar</h2>
+  <main class="container">
+    <h2>Cargar recibos para enviar</h2>
 
-    <table id="tabla-recibos">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>PDF del recibo</th>
-          <th>Email del empleado</th>
-          <th>Eliminar</th>
-        </tr>
-      </thead>
-      <tbody id="tabla-body">
-        </tbody>
-    </table>
+    <table id="tabla-recibos">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>PDF del recibo</th>
+          <th>Email del empleado</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-body">         </tbody>
+    </table>
 
-    <div class="acciones">
-      <button id="agregar-fila">➕ Añadir recibo</button>
-      <button id="enviar-todo">📨 Enviar todos</button>
-    </div>
+    <div class="acciones">
+      <button id="anadir-recibo">➕ Añadir recibo</button>       <button id="enviar-todos">📨 Enviar todos</button>     </div>
 
-    <div class="csv-carga">
-      <input type="file" id="csvFileInput" accept=".csv" hidden />
-      <button id="cargarCsv" class="custom-file-label-button">📁 Cargar CSV de Mails</button>
-    </div>
-    <p id="estado"></p>
-  </main>
+    <div class="csv-carga">
+      <input type="file" id="file-input-csv" accept=".csv" hidden />       <button id="cargarCsv" class="custom-file-label-button">📁 Cargar CSV de Mails</button>
+    </div>
+        <p id="mensaje-error-envio" style="color: red; margin-top: 15px; display: none;"></p>
+  </main>
 
-  <div id="loader" class="loader-overlay">
-    <div class="spinner"></div>
-  </div>
+  <div id="loader" class="loader-overlay">
+    <div class="spinner"></div>
+  </div>
 
-  <script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
