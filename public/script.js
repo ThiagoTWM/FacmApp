@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tablaRecibos = document.getElementById("tabla-recibos");
   const btnEnviarTodos = document.getElementById("enviar-todos");
   const mensajeError = document.getElementById("mensaje-error-envio"); 
-  const btnCargarCsv = document.getElementById("cargarCsv"); /
+  const btnCargarCsv = document.getElementById("cargarCsv"); 
   const fileInputCsv = document.getElementById("file-input-csv"); 
 
   let contadorRecibos = 0;
