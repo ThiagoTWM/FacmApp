@@ -1,84 +1,451 @@
-/* Fondo general con degradado moderno */
-.login-page {
-  background: linear-gradient(135deg, #005bbb, #96c8fa);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+/* Variables CSS para colores */
+:root {
+  --color-primary-blue: #005bbb; /* Azul principal de FACCMA */
+  --color-dark-blue: #003f88; /* Azul más oscuro para títulos/texto */
+  --color-light-blue: #96c8fa; /* Azul claro para degradados */
+  --color-white: #ffffff;
+  --color-gray-light: #f0f2f5;
+  --color-text-dark: #333333;
+  --color-error: #d62828;
 }
 
-/* Caja central del login */
+/* Base global: Fuentes */
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Contenedor principal de la página de login (tu <main class="login-container">) */
+/* Este es el que se encargará del fondo y de CENTRAR su contenido */
+.login-container {
+  background: linear-gradient(135deg, var(--color-primary-blue), var(--color-light-blue));
+  min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+  display: flex;         /* Habilita Flexbox */
+  justify-content: center; /* Centrado horizontal del contenido (el formulario) */
+  align-items: center;     /* Centrado vertical del contenido (el formulario) */
+  padding: 1.5rem; /* Pequeño padding para pantallas muy pequeñas */
+  overflow: hidden; /* Evita barras de scroll innecesarias */
+}
+
+/* La caja del formulario de login (tu <form class="login-box">) */
 .login-box {
-  background-color: #fff;
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-  text-align: center;
+  background-color: var(--color-white);
+  padding: 2.5rem 2.5rem; /* Padding interno de la caja */
+  border-radius: 18px; /* Bordes redondeados */
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25); /* Sombra elegante */
+  text-align: center; /* Centra el texto y elementos internos como el h2 */
   width: 100%;
-  max-width: 400px;
-  animation: fadeIn 0.6s ease-in-out;
+  max-width: 400px; /* Ancho máximo de la caja */
+  animation: fadeIn 0.8s ease-out; /* Animación de entrada */
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Borde muy sutil */
 }
 
-/* Título */
-.login-box h1 {
-  margin-bottom: 1.8rem;
-  color: #003f88;
-  font-size: 2rem;
+/* Título (tu <h2>Acceso FACCMA</h2>) */
+.login-box h2 {
+  margin-bottom: 2rem; /* Espacio debajo del título */
+  color: var(--color-dark-blue);
+  font-size: 2.2rem;
   font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
-/* Inputs */
+/* Inputs de usuario y contraseña */
 .login-box input {
-  width: 100%;
+  width: calc(100% - 28px); /* 100% menos el padding horizontal para el box-sizing */
   padding: 14px;
-  margin-bottom: 1.2rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border 0.2s ease;
+  margin-bottom: 1.5rem; /* Espacio entre los inputs y el botón */
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  color: var(--color-text-dark);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .login-box input:focus {
   outline: none;
-  border-color: #005bbb;
-  box-shadow: 0 0 0 2px rgba(0, 91, 187, 0.2);
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 0 0 4px rgba(0, 91, 187, 0.2);
 }
 
-/* Botón */
+/* Botón de Ingresar */
 .login-box button {
   width: 100%;
-  padding: 14px;
-  font-size: 1rem;
+  padding: 15px;
+  font-size: 1.1rem;
   font-weight: 600;
-  background-color: #005bbb;
-  color: #fff;
+  background-color: var(--color-primary-blue);
+  color: var(--color-white);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  letter-spacing: 0.02em;
 }
 
 .login-box button:hover {
-  background-color: #004a99;
+  background-color: var(--color-dark-blue);
+  transform: translateY(-2px);
 }
 
-/* Mensaje de error */
-#mensaje-error {
-  color: #d62828;
-  margin-top: 0.8rem;
+.login-box button:active {
+  transform: translateY(0);
+  background-color: #003a7a;
+}
+
+/* Mensaje de estado/error (tu <p id="estado" class="estado-login"></p>) */
+#estado { /* Usamos el ID para ser más específicos */
+  color: var(--color-error); /* Color de error */
+  margin-top: 1.2rem;
   font-size: 0.95rem;
+  font-weight: 500;
+  background-color: rgba(214, 40, 40, 0.1); /* Fondo suave */
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-error);
+  display: none; /* Asegúrate que JavaScript lo muestre/oculte */
 }
 
-/* Animación suave de entrada */
+/* Animación de entrada para la caja de login */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* --- MEDIA QUERIES PARA ADAPTARSE A PANTALLAS MÁS PEQUEÑAS --- */
+@media (max-width: 768px) {
+  .login-box {
+    padding: 2rem 1.5rem;
+    max-width: 90%; /* Ocupa más ancho en pantallas pequeñas */
+  }
+
+  .login-box h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box h2 {
+    font-size: 1.6rem;
+  }
+
+  .login-box input,
+  .login-box button {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+}
+
+/* --- ESTILOS ADICIONALES PARA index.html (Si necesitas centralizarlos aquí) --- */
+/* (Deja estos si planeas usar el mismo style.css para index.html también) */
+
+/* Contenedor principal de la aplicación */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centrar contenido horizontalmente */
+  padding: 2rem;
+  max-width: 1000px; /* Limitar el ancho máximo para una mejor lectura */
+  margin: 0 auto; /* Centrar el contenedor en la página */
+  background-color: var(--color-gray-light); /* Fondo suave para la app */
+  min-height: 100vh;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05); /* Sombra suave al contenedor principal */
+}
+
+/* Estilos para el encabezado (si lo tienes) */
+.app-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.app-header .btn-logout {
+  background-color: var(--color-light-blue);
+  color: var(--color-dark-blue);
+  padding: 8px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.app-header .btn-logout:hover {
+  background-color: var(--color-white);
+}
+
+/* Contenedor de la tabla y botones */
+.main-content {
+  background-color: var(--color-white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.main-content h2 {
+  text-align: center;
+  color: var(--color-dark-blue);
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+/* Tabla de recibos */
+.receipt-table-container {
+  overflow-x: auto; /* Para tablas que exceden el ancho en móviles */
+  margin-bottom: 1.5rem;
+}
+
+#tabla-recibos {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+#tabla-recibos th,
+#tabla-recibos td {
+  border: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+#tabla-recibos th {
+  background-color: var(--color-primary-blue);
+  color: var(--color-white);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+#tabla-recibos td {
+  background-color: var(--color-white);
+  color: var(--color-text-dark);
+}
+
+#tabla-recibos tr:nth-child(even) td {
+  background-color: var(--color-gray-light); /* Rayado para mejor legibilidad */
+}
+
+/* Estilos para los inputs dentro de la tabla */
+#tabla-recibos input[type="file"],
+#tabla-recibos input[type="email"] {
+  width: 100%; /* Ajusta el ancho para que quepa bien */
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+#tabla-recibos input[type="file"]:focus,
+#tabla-recibos input[type="email"]:focus {
+  outline: none;
+  border-color: var(--color-primary-blue);
+  box-shadow: 0 0 0 2px rgba(0, 91, 187, 0.2);
+}
+
+/* Estilo para el nombre del archivo PDF seleccionado */
+.file-name {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 5px;
+  word-break: break-all; /* Evita que el nombre largo desborde */
+}
+
+
+/* Botones de acción general (Añadir, Enviar, Cargar CSV) */
+.action-buttons-container {
+  display: flex;
+  flex-wrap: wrap; /* Para que los botones se adapten a la pantalla */
+  gap: 1rem; /* Espacio entre botones */
+  justify-content: center; /* Centrar los botones */
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.action-buttons-container button,
+.action-buttons-container label { /* Aplica estilos también a las etiquetas para los inputs de archivo */
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex; /* Permite alinear el icono y el texto */
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Espacio entre icono y texto */
+  text-decoration: none; /* Si usas 'a' tag */
+}
+
+/* Botón Añadir Recibo */
+#anadir-recibo {
+  background-color: var(--color-primary-blue);
+  color: var(--color-white);
+}
+#anadir-recibo:hover {
+  background-color: var(--color-dark-blue);
+  transform: translateY(-2px);
+}
+
+/* Botón Enviar Todos */
+#enviar-todos {
+  background-color: #28a745; /* Un verde para la acción de enviar */
+  color: var(--color-white);
+}
+#enviar-todos:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+/* Botón Cargar CSV (usamos un label para estilizar el input file) */
+#cargarCsv {
+  background-color: #007bff; /* Un azul diferente para CSV */
+  color: var(--color-white);
+}
+#cargarCsv:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Ocultar el input file real para Cargar CSV */
+#file-input-csv {
+    display: none;
+}
+
+
+/* Botón Eliminar (dentro de la tabla) */
+.btn-eliminar {
+  background-color: #dc3545; /* Rojo para eliminar */
+  color: var(--color-white);
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Mensaje de error de envío (script.js) */
+#mensaje-error-envio {
+  color: var(--color-error);
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: rgba(214, 40, 40, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-error);
+  text-align: center;
+  width: 100%;
+}
+
+/* Botón Cerrar Sesión */
+.logout-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+#cerrar-sesion {
+  background-color: #6c757d; /* Un gris neutro para cerrar sesión */
+  color: var(--color-white);
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#cerrar-sesion:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+  .login-box {
+    padding: 2rem 1.5rem;
+    max-width: 90%;
+  }
+
+  .login-box h2 { /* Ajustado a h2 */
+    font-size: 1.8rem;
+  }
+
+  .app-container {
+    padding: 1rem;
+  }
+
+  .app-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .app-header h1 {
+    margin-bottom: 1rem;
+  }
+
+  .action-buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .action-buttons-container button,
+  .action-buttons-container label {
+    width: 90%;
+  }
+
+  #tabla-recibos th,
+  #tabla-recibos td {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box h2 { /* Ajustado a h2 */
+    font-size: 1.6rem;
+  }
+
+  .login-box input,
+  .login-box button {
+    padding: 12px;
+    font-size: 0.95rem;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
   }
 }
 
