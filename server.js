@@ -11,86 +11,68 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session
+// Sesión
 app.use(session({
-  secret: process.env.SESSION_SECRET || "faccma_secret_key",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: false,
     httpOnly: true,
-    maxAge: 2 * 60 * 60 * 1000 // 2 horas
+    maxAge: 2 * 60 * 60 * 1000
   }
 }));
 
-// Middleware para proteger rutas privadas
-function verificarSesion(req, res, next) {
-  if (req.session && req.session.user) {
-    return next();
-  } else {
-    return res.status(401).json({ message: "Sesión expirada o no iniciada" });
-  }
-}
-
-// ✅ Ruta login con async
+// Login
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (username === process.env.LOGIN_USER) {
-    try {
-      const esValido = await bcrypt.compare(password, process.env.LOGIN_PASS_HASH);
-      if (esValido) {
-        req.session.user = username;
-        return res.status(200).json({ message: "Login correcto" });
-      }
-    } catch (error) {
-      console.error("Error al comparar contraseñas:", error);
-      return res.status(500).json({ message: "Error interno del servidor" });
+    const esValido = await bcrypt.compare(password, process.env.LOGIN_PASS_HASH);
+    if (esValido) {
+      req.session.user = username;
+      return res.status(200).json({ message: "Login exitoso" });
     }
   }
-
   return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
 });
 
-// Ruta logout
+// Logout
 app.get("/logout", (req, res) => {
   req.session.destroy(err => {
-    if (err) {
-      console.error("Error al cerrar sesión:", err);
-      return res.status(500).send("Error al cerrar sesión");
-    }
+    if (err) return res.status(500).send("Error al cerrar sesión");
     res.clearCookie("connect.sid");
-    return res.redirect("/FacmApp.html");
+    res.redirect("/FacmApp.html");
   });
 });
 
-// Multer para recibos PDF
+// Middleware protección
+function verificarSesion(req, res, next) {
+  if (req.session.user) return next();
+  return res.status(401).json({ message: "Sesión no iniciada" });
+}
+
+// Multer
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Ruta de envío de recibos
+// Envío de recibos
 app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req, res) => {
   try {
     const datos = JSON.parse(req.body.datos || "[]");
     const archivos = req.files || [];
 
-    console.log("✅ DATOS RECIBIDOS:", datos);
-    console.log("📄 ARCHIVOS RECIBIDOS:", archivos.map(f => f.originalname));
-
     if (datos.length !== archivos.length) {
-      console.warn("❌ Cantidad de archivos y emails no coincide");
       return res.status(400).json({ message: "Cantidad de archivos y mails no coinciden" });
     }
 
     const transporter = nodemailer.createTransport({
-      host: "mail.faccma.org",
-      port: 587,
-      secure: false,
+      service: "gmail",
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS
@@ -108,18 +90,18 @@ app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req
           content: archivos[i].buffer
         }]
       });
-      console.log(`📤 Correo enviado a: ${datos[i].email}`);
+      console.log("✉️ Enviado a:", datos[i].email);
     }
 
     return res.status(200).json({ message: "Todos los correos fueron enviados correctamente" });
+
   } catch (error) {
-    console.error("❌ ERROR en /enviar-recibos:", error);
-    return res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    console.error("❌ Error al enviar correos:", error);
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
-
-// Fallback 404
+// Fallback
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "public", "FacmApp.html"));
 });
