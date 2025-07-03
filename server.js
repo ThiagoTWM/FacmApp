@@ -40,16 +40,16 @@ function verificarSesion(req, res, next) {
 }
 
 // Ruta login
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-
-  if (username === process.env.LOGIN_USER && password === process.env.LOGIN_PASS) {
+if (username === process.env.LOGIN_USER) {
+  const esValido = await bcrypt.compare(password, process.env.LOGIN_PASS_HASH);
+  if (esValido) {
     req.session.user = username;
     return res.status(200).json({ message: "Login correcto" });
-  } else {
-    return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
   }
-});
+}
+return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+
+
 
 // Ruta logout
 app.get("/logout", (req, res) => {
