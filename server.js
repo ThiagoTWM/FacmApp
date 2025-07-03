@@ -125,4 +125,4 @@ function verificarSesion(req, res, next) {
         console.log('Sesión activa para usuario:', req.session.user);
         return next(); // Permite continuar a la ruta
     } else {
-        console.warn("Intento de acceso a ruta protegida sin sesión activa.")};
+        console.warn("Intento de acceso a ruta protegida sin sesión activa.")}};
