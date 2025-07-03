@@ -79,7 +79,11 @@ app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req
     const datos = JSON.parse(req.body.datos || "[]");
     const archivos = req.files || [];
 
+    console.log("✅ DATOS RECIBIDOS:", datos);
+    console.log("📄 ARCHIVOS RECIBIDOS:", archivos.map(f => f.originalname));
+
     if (datos.length !== archivos.length) {
+      console.warn("❌ Cantidad de archivos y emails no coincide");
       return res.status(400).json({ message: "Cantidad de archivos y mails no coinciden" });
     }
 
@@ -104,15 +108,16 @@ app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req
           content: archivos[i].buffer
         }]
       });
-      console.log(`✉️ Correo enviado a: ${datos[i].email}`);
+      console.log(`📤 Correo enviado a: ${datos[i].email}`);
     }
 
     return res.status(200).json({ message: "Todos los correos fueron enviados correctamente" });
   } catch (error) {
-    console.error("❌ Error al enviar recibos:", error);
-    return res.status(500).json({ message: "Error interno del servidor" });
+    console.error("❌ ERROR en /enviar-recibos:", error);
+    return res.status(500).json({ message: "Error interno del servidor", error: error.message });
   }
 });
+
 
 // Fallback 404
 app.use((req, res) => {
