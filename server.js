@@ -23,7 +23,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // En producción con HTTPS usá: true
+    secure: false,
     httpOnly: true,
     maxAge: 2 * 60 * 60 * 1000 // 2 horas
   }
@@ -34,22 +34,29 @@ function verificarSesion(req, res, next) {
   if (req.session && req.session.user) {
     return next();
   } else {
-    console.warn("Intento de acceso sin sesión activa");
     return res.status(401).json({ message: "Sesión expirada o no iniciada" });
   }
 }
 
-// Ruta login
-if (username === process.env.LOGIN_USER) {
-  const esValido = await bcrypt.compare(password, process.env.LOGIN_PASS_HASH);
-  if (esValido) {
-    req.session.user = username;
-    return res.status(200).json({ message: "Login correcto" });
+// ✅ Ruta login con async
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === process.env.LOGIN_USER) {
+    try {
+      const esValido = await bcrypt.compare(password, process.env.LOGIN_PASS_HASH);
+      if (esValido) {
+        req.session.user = username;
+        return res.status(200).json({ message: "Login correcto" });
+      }
+    } catch (error) {
+      console.error("Error al comparar contraseñas:", error);
+      return res.status(500).json({ message: "Error interno del servidor" });
+    }
   }
-}
-return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
 
-
+  return res.status(401).json({ message: "Usuario o contraseña incorrectos" });
+});
 
 // Ruta logout
 app.get("/logout", (req, res) => {
@@ -71,10 +78,6 @@ app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req
   try {
     const datos = JSON.parse(req.body.datos || "[]");
     const archivos = req.files || [];
-
-    console.log("🔐 Sesión activa para:", req.session.user);
-    console.log("Archivos recibidos:", archivos.length);
-    console.log("Emails destino:", datos.map(d => d.email));
 
     if (datos.length !== archivos.length) {
       return res.status(400).json({ message: "Cantidad de archivos y mails no coinciden" });
@@ -111,7 +114,7 @@ app.post("/enviar-recibos", verificarSesion, upload.array("recibos"), async (req
   }
 });
 
-// Fallback para cualquier otra ruta (404 o frontend)
+// Fallback 404
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "public", "FacmApp.html"));
 });
@@ -119,4 +122,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
-// Exportar app para pruebasgit add .
